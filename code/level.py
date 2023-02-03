@@ -78,9 +78,8 @@ class Level:
                                 Enemy(monster_name,
                                       (x,y),
                                       [self.visible_sprites, self.attackable_sprites],
-                                      self.obstacle_sprites)
-
-
+                                      self.obstacle_sprites,
+                                      self.damage_player)
 
     def create_attack(self):
         self.current_attack = Weapon(self.player,[self.visible_sprites, self.attack_sprites])
@@ -92,7 +91,6 @@ class Level:
         if self.current_attack:
             self.current_attack.kill()
         self.current_attack = None
-
     def player_attack_logic(self):
         if self.attack_sprites:
             for attack_sprite in self.attack_sprites:
@@ -103,6 +101,13 @@ class Level:
                             target_sprite.kill()
                         else:
                             target_sprite.get_damage(self.player,attack_sprite.sprite_type)
+
+    def damage_player(self, amount,attack_type):
+        if self.player.vulnerable:
+            self.player.health -= amount
+            self.player.vulnerable = False
+            self.player.hurt_time = pygame.time.get_ticks()
+            # spawn particles
     def run(self):
 
         # update and draw the game
