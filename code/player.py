@@ -2,9 +2,9 @@ import pygame
 from settings import *
 from support import *
 from debug import *
+from entity import Entity
 
-
-class Player(pygame.sprite.Sprite):
+class Player(Entity):
     def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_weapon, create_magic):
         super().__init__(groups)
         self.image = pygame.image.load("graphics/test/player.png").convert_alpha()
@@ -149,42 +149,6 @@ class Player(pygame.sprite.Sprite):
                     self.magic_index = 0
 
                 self.magic = list(weapon_data.keys())[self.magic_index]
-
-    def move(self, speed):
-        """
-        Updates player position. Moves hitbox first, checks for collisions, then moves player to
-        position of hitbox.
-        :param speed: magnitude of velocity
-        """
-        if self.direction.magnitude() != 0:  # vector of 0 cannot be normalized
-            self.direction = self.direction.normalize()  # prevents diagonal movement from being faster
-        self.hitbox.x += self.direction.x * speed
-        self.collision('horizontal')
-        self.hitbox.y += self.direction.y * speed
-        self.collision('vertical')
-        self.rect.center = self.hitbox.center  # rect follows the hitbox
-
-    def collision(self, direction):
-        """
-        Checks the hitbox of the player with the hitbox of all obstacle sprites. Uses the current player
-        direction to determine whether the collision is horizontal or vertical. Resets hitboxes
-        if there is a collision.
-        :param direction: the direction the current player movement. Either 'horizontal' or 'vertical'
-        """
-        if direction == 'horizontal':
-            for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect(self.hitbox):
-                    if self.direction.x > 0:  # moving right
-                        self.hitbox.right = sprite.hitbox.left
-                    if self.direction.x < 0:  # moving left
-                        self.hitbox.left = sprite.hitbox.right
-        if direction == 'vertical':
-            for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect(self.hitbox):
-                    if self.direction.y < 0:  # moving up
-                        self.hitbox.top = sprite.hitbox.bottom
-                    if self.direction.y > 0:  # moving down
-                        self.hitbox.bottom = sprite.hitbox.top
 
     def cooldowns(self):
         """
