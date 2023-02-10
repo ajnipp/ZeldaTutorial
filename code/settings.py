@@ -4,6 +4,12 @@ HEIGTH   = 720
 FPS      = 60
 TILESIZE = 64
 
+HITBOX_OFFSET = {
+    'player': -26,
+    'object': -40,
+    'grass': -10,
+    'invisible': 0}
+
 # weapons
 weapon_data = {
     'sword': {'cooldown': 100, 'damage': 15, 'graphic': 'graphics/weapons/sword/full.png'},
